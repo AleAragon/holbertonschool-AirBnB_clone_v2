@@ -16,18 +16,20 @@ def do_deploy(archive_path):
     """
     if exists(archive_path) is False:
         return False
-    
-    filename = archive_path.split("/")[1]
-    unfile = filename[0:-4]
-    path = "/data/web_static/releases/"
-    put(archive_path, "/tmp/")
-    run("sudo mkdir -p {}{}".format(path, unfile))
-    run("sudo tar -xzf /tmp/{} -C {}{}".format(filename, path, unfile))
-    run("sudo rm -rf /tmp/{}".format(filename))
-    run("sudo mv {0}{1}/web_static/* {0}{1}/".format(path, unfile))
-    run("sudo rm -rf {}{}/web_static".format(path, unfile))
-    run("sudo rm -rf /data/web_static/current")
-    run("sudo ln -s {}{}/ /data/web_static/current".format(path, unfile))
-    print("New version deployed!")
-    sudo('service nginx restart')
-    return True
+    try:
+        filename = archive_path.split("/")[1]
+        unfile = filename[0:-4]
+        path = "/data/web_static/releases/"
+        put(archive_path, "/tmp/")
+        run("sudo mkdir -p {}{}".format(path, unfile))
+        run("sudo tar -xzf /tmp/{} -C {}{}".format(filename, path, unfile))
+        run("sudo rm -rf /tmp/{}".format(filename))
+        run("sudo mv {0}{1}/web_static/* {0}{1}/".format(path, unfile))
+        run("sudo rm -rf {}{}/web_static".format(path, unfile))
+        run("sudo rm -rf /data/web_static/current")
+        run("sudo ln -s {}{}/ /data/web_static/current".format(path, unfile))
+        print("New version deployed!")
+        sudo('service nginx restart')
+        return True
+    except Exception:
+        return False
