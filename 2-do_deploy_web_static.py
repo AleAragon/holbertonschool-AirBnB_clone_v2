@@ -19,7 +19,7 @@ def do_deploy(archive_path):
         If the file doesn't exist at archive_path or an error occurs - False.
         Otherwise - True.
     """
-    if os.path.isfile(archive_path) is False:
+    if os.path.exists(archive_path) is False:
         return False
     file = archive_path.split("/")[-1]
     name = file.split(".")[0]
