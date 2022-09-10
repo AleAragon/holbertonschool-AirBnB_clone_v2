@@ -28,7 +28,6 @@ def do_deploy(archive_path):
         run("sudo rm -rf {}{}/web_static".format(path, unfile))
         run("sudo rm -rf /data/web_static/current")
         run("sudo ln -s {}{}/ /data/web_static/current".format(path, unfile))
-        print("New version deployed!")
         sudo('service nginx restart')
         return True
     except Exception:
