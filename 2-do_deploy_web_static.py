@@ -21,13 +21,14 @@ def do_deploy(archive_path):
         unfile = filename.split(".")[0]
         path = "/data/web_static/releases/"
         put(archive_path, "/tmp/")
-        run("mkdir -p {}{}".format(path, unfile))
-        run("tar -xzf /tmp/{} -C {}{}".format(filename, path, unfile))
-        run("rm -rf /tmp/{}".format(filename))
-        run('mv {0}{1}/web_static/* {0}{1}/'.format(path, unfile))
-        run('rm -rf {}{}/web_static'.format(path, unfile))
-        run('rm -rf /data/web_static/current')
-        run('ln -s {}{}/ /data/web_static/current'.format(path, unfile))
+        run("sudo mkdir -p {}{}".format(path, unfile))
+        run("sudo tar -xzf /tmp/{} -C {}{}".format(filename, path, unfile))
+        run("sudo rm -rf /tmp/{}".format(filename))
+        run('sudo mv {0}{1}/web_static/* {0}{1}/'.format(path, unfile))
+        run('sudo rm -rf {}{}/web_static'.format(path, unfile))
+        run('sudo rm -rf /data/web_static/current')
+        run('sudo ln -s {}{}/ /data/web_static/current'.format(path, unfile))
+        print("New version deployed!")
         return True
     except Exception:
         return False
