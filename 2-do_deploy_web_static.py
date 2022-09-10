@@ -4,7 +4,7 @@ Fabric script based on the file 1-pack_web_static.py that distributes an
 archive to the web servers
 """
 from os.path import exists
-from fabric.api import put, run, env
+from fabric.api import put, run, env, sudo
 
 env.hosts = ["54.175.45.148", "52.207.249.170"]
 
@@ -17,8 +17,8 @@ def do_deploy(archive_path):
     if exists(archive_path) is False:
         return False
     try:
-        filename = archive_path.split("/")[-1]
-        unfile = filename.split(".")[0]
+        filename = archive_path.split("/")[1]
+        unfile = filename[0:-4]
         path = "/data/web_static/releases/"
         put(archive_path, "/tmp/")
         run("sudo mkdir -p {}{}".format(path, unfile))
@@ -29,6 +29,7 @@ def do_deploy(archive_path):
         run("sudo rm -rf /data/web_static/current")
         run("sudo ln -s {}{}/ /data/web_static/current".format(path, unfile))
         print("New version deployed!")
+        sudo('service nginx restart')
         return True
     except Exception:
         return False
