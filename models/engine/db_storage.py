@@ -11,16 +11,17 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 
+classes = {
+        'BaseModel': BaseModel, 'User': User, 'Place': Place,
+        'State': State, 'City': City, 'Amenity': Amenity,
+        'Review': Review
+    }
 
 class DBStorage:
     """New bdstorage engine"""
     __engine = None
     __session = None
-    classes = {
-        'BaseModel': BaseModel, 'User': User, 'Place': Place,
-        'State': State, 'City': City, 'Amenity': Amenity,
-        'Review': Review
-    }
+    
 
     def __init__(self):
         """Engine constructor"""
@@ -34,18 +35,15 @@ class DBStorage:
             metadata.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
-        """All method"""
-        dict_cls = {}
-        if cls:
-            query = self.__session.query(cls).all()
-            for key, value in query.items():
-                dict_cls[key] = value
-        else:
-            for CLS in self.classes:
-                query = self.__session.query(CLS).all()
-                for key, value in query.items():
-                    dict_cls[key] = value
-        return (dict_cls)
+        """query on the current database session"""
+        new_dict = {}
+        for clss in classes:
+            if cls is None or cls is classes[clss] or cls is clss:
+                objs = self.__session.query(classes[clss]).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    new_dict[key] = obj
+        return (new_dict)
 
     def new(self, obj):
         """New method"""
